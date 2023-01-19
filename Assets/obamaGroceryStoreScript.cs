@@ -90,7 +90,11 @@ public class obamaGroceryStoreScript : MonoBehaviour {
         currentSolves = Bomb.GetSolvedModuleNames();
         mainObject.SetActive(true);
 
-        Game.OnLightsChange += ToggleObama;
+        Game.OnLightsChange += delegate(bool state)
+        {
+            lightsOn = state;
+            ToggleObama(lightsOn);
+        };
         for (var i = 0; i < 3; i++)
             TPButtons.Add(i == 0 ? weaponButtons : (i == 1 ? sidekickButtons : foodButtons));
     }
@@ -305,7 +309,6 @@ public class obamaGroceryStoreScript : MonoBehaviour {
 
     void ToggleObama(bool state)
     {
-        lightsOn = state;
         obamaRenderer.color = state ? Color.white : darkColor;
     }
 
@@ -369,12 +372,7 @@ public class obamaGroceryStoreScript : MonoBehaviour {
 
             obamaRenderer.color = Color.red;
             yield return new WaitForSeconds(1f);
-            while (!lightsOn)
-            {
-                obamaRenderer.color = darkColor;
-                yield return new WaitForSeconds(.1f);
-            }
-            obamaRenderer.color = Color.white;
+            ToggleObama(lightsOn);
             animationPlaying = false;
         }
         mainObject.SetActive(true);
