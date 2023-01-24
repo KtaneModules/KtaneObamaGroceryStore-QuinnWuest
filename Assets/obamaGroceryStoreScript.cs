@@ -6,7 +6,8 @@ using Random = UnityEngine.Random;
 using KModkit;
 using System.Collections;
 
-public class obamaGroceryStoreScript : MonoBehaviour {
+public class obamaGroceryStoreScript : MonoBehaviour
+{
 
     public KMAudio Audio;
     public KMBombInfo Bomb;
@@ -25,7 +26,7 @@ public class obamaGroceryStoreScript : MonoBehaviour {
     static int moduleIdCounter = 1;
     int moduleId;
     bool solved;
-    
+
     string lastSolved = "OBAMA GROCERY STORE";
     List<string> currentSolves;
 
@@ -71,14 +72,14 @@ public class obamaGroceryStoreScript : MonoBehaviour {
             weaponButtons[i].OnHighlightEnded += delegate { HighlightOption(j, false); };
 
             sidekickButtons[i].OnInteract += delegate { PressSidekick(j); sidekickButtons[j].AddInteractionPunch(); Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Module.transform); return false; };
-            sidekickButtons[i].OnHighlight += delegate { HighlightOption(6+j, true); };
-            sidekickButtons[i].OnHighlightEnded += delegate { HighlightOption(6+j, false); };
+            sidekickButtons[i].OnHighlight += delegate { HighlightOption(6 + j, true); };
+            sidekickButtons[i].OnHighlightEnded += delegate { HighlightOption(6 + j, false); };
 
             if (i != 5)
             {
                 foodButtons[i].OnInteract += delegate { PressFood(j); foodButtons[j].AddInteractionPunch(); Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Module.transform); return false; };
-                foodButtons[i].OnHighlight += delegate { HighlightOption(12+j, true); };
-                foodButtons[i].OnHighlightEnded += delegate { HighlightOption(12+j, false); };
+                foodButtons[i].OnHighlight += delegate { HighlightOption(12 + j, true); };
+                foodButtons[i].OnHighlightEnded += delegate { HighlightOption(12 + j, false); };
             }
         }
         for (int i = 0; i < 3; i++)
@@ -90,21 +91,22 @@ public class obamaGroceryStoreScript : MonoBehaviour {
         currentSolves = Bomb.GetSolvedModuleNames();
         mainObject.SetActive(true);
 
-        Game.OnLightsChange += delegate(bool state)
+        Game.OnLightsChange += delegate (bool state)
         {
             lightsOn = state;
             ToggleObama(lightsOn);
         };
         for (var i = 0; i < 3; i++)
             TPButtons.Add(i == 0 ? weaponButtons : (i == 1 ? sidekickButtons : foodButtons));
+
     }
-    
+
     private void Update()
     {
         if (solved) { return; }
         if (currentSolves.Count != Bomb.GetSolvedModuleNames().Count)
         {
-            lastSolved = getLatestSolve(Bomb.GetSolvedModuleNames(), currentSolves).ToUpperInvariant();
+            lastSolved = getLatestSolve(Bomb.GetSolvedModuleNames(), currentSolves);
             // DebugMsg("Last solved mod is now " + lastSolved + "...");
         }
     }
@@ -122,7 +124,6 @@ public class obamaGroceryStoreScript : MonoBehaviour {
 
     string getLatestSolve(List<string> s, List<string> s2)
     {
-        string name = "";
         for (int i = 0; i < s2.Count; i++)
         {
             s.Remove(s2.ElementAt(i));
@@ -131,12 +132,20 @@ public class obamaGroceryStoreScript : MonoBehaviour {
         {
             currentSolves.Add(s.ElementAt(i));
         }
-        name = s.ElementAt(0);
-        return name;
+        return s.ElementAt(0);
     }
 
     void PressDisplay()
     {
+        var obamaService = FindObjectOfType<ObamaService>();
+        if (obamaService == null)
+        {
+            Debug.LogFormat(@"[Obama Grocery Store #{0}] Catastrophic problem: Obama Service is not present.", moduleId);
+            Module.HandlePass();
+            solved = true;
+            return;
+        }
+
         if (currentlyShown == 0)
         {
             DebugMsg("The last solved module was " + lastSolved + ".");
@@ -162,9 +171,9 @@ public class obamaGroceryStoreScript : MonoBehaviour {
 
             // Sidekick check
             rows = new[] { false, false, false, false, false, false };
-            for (int i = 0; i < 6; i++)
-                foreach (var mod in authorMods[i])
-                    if (lastSolved == mod) { rows[i] = true; break; }
+
+            foreach (var author in obamaService.ModAuthorValue(lastSolved))
+                rows[author] = true;
 
             if (!rows.Any(x => x)) // no rows in common
             {
@@ -183,19 +192,17 @@ public class obamaGroceryStoreScript : MonoBehaviour {
                         sum++;
                 correctBtns[1] = sum % 6;
             }
-            else if (rows.Count(x => x) == 1) // one row in common
-                correctBtns[1] = Array.IndexOf(rows, true);
             else
                 for (int i = 5; i >= 0; i--)
                     if (rows[i]) { correctBtns[1] = i; break; }
 
             // Food check
-            
+
             rows = new[] { false, false, false, false, false };
             for (int i = 0; i < 5; i++)
                 if (!commonLetters[i].Any(x => lastSolved.Contains(x)))
                     rows[i] = true;
-            
+
             if (!rows.Any(x => x)) // no rows in common
             {
                 int sum = 0;
@@ -223,7 +230,7 @@ public class obamaGroceryStoreScript : MonoBehaviour {
                     sum += firstHalfCount;
                 if (Bomb.IsPortPresent(Port.DVI) || Bomb.IsPortPresent(Port.StereoRCA))
                     sum += lastSolvedLetters.Length - firstHalfCount;
-                
+
                 correctBtns[2] = sum % 5;
             }
             else if (rows.Count(x => x) == 1) // one row in common
@@ -323,7 +330,7 @@ public class obamaGroceryStoreScript : MonoBehaviour {
         for (int i = 0; i < Random.Range(10, 20); i++)
         {
             int placeholder = Random.Range(0, 3);
-            Audio.PlaySoundAtTransform("punch" + (placeholder+1), Module.transform);
+            Audio.PlaySoundAtTransform("punch" + (placeholder + 1), Module.transform);
             obamaBodyButtons[Random.Range(0, 3)].AddInteractionPunch((3 - placeholder) * 3 + Random.Range(0, 3));
             obamaRenderer.flipX = i % 2 == 0;
             yield return new WaitForSeconds(punchLengths[placeholder]);
@@ -415,7 +422,7 @@ public class obamaGroceryStoreScript : MonoBehaviour {
         switch (parsedCommand[0])
         {
             case "browse":
-                if (parsedCommand.Length != 2 || !new[] {"weapon", "sidekick", "food", "weapons", "sidekicks", "foods"}.Contains(parsedCommand[1]))
+                if (parsedCommand.Length != 2 || !new[] { "weapon", "sidekick", "food", "weapons", "sidekicks", "foods" }.Contains(parsedCommand[1]))
                     yield break;
                 yield return null;
                 if (currentlyShown != 0)
@@ -423,7 +430,7 @@ public class obamaGroceryStoreScript : MonoBehaviour {
                     displayButton.OnInteract();
                     yield return new WaitForSeconds(.1f);
                 }
-                obamaBodyButtons[new[] {"weapon", "sidekick", "food", "weapons", "sidekicks", "foods"}.ToList().IndexOf(parsedCommand[1]) % 3].OnInteract();
+                obamaBodyButtons[new[] { "weapon", "sidekick", "food", "weapons", "sidekicks", "foods" }.ToList().IndexOf(parsedCommand[1]) % 3].OnInteract();
                 break;
             case "select":
                 if (currentlyShown == 0)

@@ -24,25 +24,8 @@ public class ButtonMasherModule : MonoBehaviour
 
     protected bool HandlePress()
     {
-        KMAudio.PlaySoundAtTransform("tick", this.transform);
 
-        string timerText = BombInfo.GetFormattedTime();
-
-        if (currentCount < 50 && timerText.Contains("4"))
-        {
-            currentCount++;
-
-            if (currentCount == 50)
-            {
-                BombModule.HandlePass();
-            }
-        }
-        else
-        {
-            BombModule.HandleStrike();
-        }
-
-        Counter.text = currentCount.ToString();
+		BombModule.HandlePass();
 
         return false;
     }
