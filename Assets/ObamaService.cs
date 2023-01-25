@@ -12,7 +12,6 @@ using UnityEngine.Networking;
 public class ObamaService : MonoBehaviour
 {
     public bool SettingsLoaded = false;
-    public bool IsLoading = false;
     public bool UsingDefaultList = true;
 
     private string _settingsFile;
@@ -31,7 +30,6 @@ public class ObamaService : MonoBehaviour
 
     void Awake()
     {
-
         name = "Obama Service";
 
         _settingsFile = Path.Combine(Path.Combine(Application.persistentDataPath, "Modsettings"), "ObamaSettings.json");
@@ -72,6 +70,7 @@ public class ObamaService : MonoBehaviour
     {
         using (var http = UnityWebRequest.Get(_settings.SiteUrl))
         {
+            _settings.AuthorMods = _backupAuthorModList.ToArray();
             // Request and wait for the desired page.
             yield return http.SendWebRequest();
 
@@ -118,7 +117,6 @@ public class ObamaService : MonoBehaviour
             _settings.AuthorMods = allRelevantMods.Select(i => i.ToArray()).ToArray();
             _settings.Version = 1;
             SettingsLoaded = true;
-            IsLoading = false;
 
             try
             {
