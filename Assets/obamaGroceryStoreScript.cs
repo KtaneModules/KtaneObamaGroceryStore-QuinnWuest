@@ -53,6 +53,8 @@ public class obamaGroceryStoreScript : MonoBehaviour
     bool animationPlaying = false;
     bool lightsOn = false;
 
+    private string[][] _authorMods;
+
     private void Awake()
     {
         moduleId = moduleIdCounter++;
@@ -128,6 +130,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
             warningObject.SetActive(true);
             Debug.LogFormat(@"[Obama Grocery Store #{0}] Unable to download list of modules. Using default list.", moduleId);
         }
+        _authorMods = obamaService.GetAuthorMods();
     }
 
     string getLatestSolve(List<string> s, List<string> s2)
@@ -143,17 +146,15 @@ public class obamaGroceryStoreScript : MonoBehaviour
         return s.ElementAt(0);
     }
 
+    public IEnumerable<int> GetModAuthorValue(string modName)
+    {
+        for (int i = 0; i < _authorMods.Length; i++)
+            if (_authorMods[i].Any(x => x.EqualsIgnoreCase(modName)))
+                yield return i;
+    }
+
     void PressDisplay()
     {
-        var obamaService = FindObjectOfType<ObamaService>();
-        if (obamaService == null)
-        {
-            Debug.LogFormat(@"[Obama Grocery Store #{0}] Catastrophic problem: Obama Service is not present.", moduleId);
-            Module.HandlePass();
-            solved = true;
-            return;
-        }
-
         if (currentlyShown == 0)
         {
             DebugMsg("The last solved module was " + lastSolved + ".");
@@ -180,7 +181,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
             // Sidekick check
             rows = new[] { false, false, false, false, false, false };
 
-            foreach (var author in obamaService.ModAuthorValue(lastSolved))
+            foreach (var author in GetModAuthorValue(lastSolved))
                 rows[author] = true;
 
             if (!rows.Any(x => x)) // no rows in common

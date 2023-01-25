@@ -12,8 +12,8 @@ using UnityEngine.Networking;
 public class ObamaService : MonoBehaviour
 {
     public bool SettingsLoaded = false;
-
-    public bool UsingDefaultList = false;
+    public bool IsLoading = false;
+    public bool UsingDefaultList = true;
 
     private string _settingsFile;
     private ObamaSettings _settings;
@@ -118,6 +118,7 @@ public class ObamaService : MonoBehaviour
             _settings.AuthorMods = allRelevantMods.Select(i => i.ToArray()).ToArray();
             _settings.Version = 1;
             SettingsLoaded = true;
+            IsLoading = false;
 
             try
             {
@@ -133,10 +134,8 @@ public class ObamaService : MonoBehaviour
         }
     }
 
-    public IEnumerable<int> ModAuthorValue(string modName)
+    public string[][] GetAuthorMods()
     {
-        for (int i = 0; i < _settings.AuthorMods.Length; i++)
-            if (_settings.AuthorMods[i].Any(x => x.EqualsIgnoreCase(modName)))
-                yield return i;
+        return _settings.AuthorMods;
     }
 }
