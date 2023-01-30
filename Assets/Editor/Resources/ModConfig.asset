@@ -11,15 +11,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: obamaGroceryStore
+  id: ObamaGroceryStore
   title: Obama Grocery Store [REUPLOAD]
   author: EpicToast
-  description: "Big, big chungus! Big chungus, big chungus!\n\nThis is a reupload
+  description: "Big, big chungus! Big chungus, big chungus!\r\n\r\nThis is a reupload
     of EpicToast's module with changes and bug fixes. Unsubscribe from the old version
     here:\r\nhttps://steamcommunity.com/sharedfiles/filedetails/?id=2622309969\r\n\r\nModule
     ID: obamaGroceryStore\r\n[url=https://ktane.timwi.de/HTML/Obama%20Grocery%20Store.html]Manual
     HTML[/url]\r\n[url=https://ktane.timwi.de/PDF/Obama%20Grocery%20Store.pdf]Manual
     PDF[/url]"
-  version: v1.0
+  version: 1.0
   outputFolder: build
-  previewImage: {fileID: 2800000, guid: 4792fd936774a8d409d87755cf02280b, type: 3}
+  previewImage: {fileID: 2800000, guid: 7f3de21b3b1c3474ca50d45cdc4abd42, type: 3}

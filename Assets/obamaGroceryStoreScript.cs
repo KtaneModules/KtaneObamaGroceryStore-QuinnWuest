@@ -8,7 +8,6 @@ using System.Collections;
 
 public class obamaGroceryStoreScript : MonoBehaviour
 {
-
     public KMAudio Audio;
     public KMBombInfo Bomb;
     public KMBombModule Module;
@@ -88,6 +87,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
 
         Game.OnLightsChange += delegate (bool state)
         {
+            Debug.Log("asdfasdfasdf");
             lightsOn = state;
             ToggleObama(lightsOn);
         };
