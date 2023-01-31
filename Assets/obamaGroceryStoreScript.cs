@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using System;
-using Random = UnityEngine.Random;
-using KModkit;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using KModkit;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class obamaGroceryStoreScript : MonoBehaviour
 {
@@ -99,9 +99,11 @@ public class obamaGroceryStoreScript : MonoBehaviour
     private void Update()
     {
         if (solved) { return; }
-        if (currentSolves.Count != Bomb.GetSolvedModuleNames().Count)
+
+        var solvedModules = Bomb.GetSolvedModuleNames();
+        if (currentSolves.Count != solvedModules.Count)
         {
-            lastSolved = getLatestSolve(Bomb.GetSolvedModuleNames(), currentSolves).ToUpperInvariant();
+            lastSolved = getLatestSolve(solvedModules, currentSolves).ToUpperInvariant();
             // DebugMsg("Last solved mod is now " + lastSolved + "...");
         }
         warningObject.SetActive(FindObjectOfType<ObamaService>().UsingDefaultList);
