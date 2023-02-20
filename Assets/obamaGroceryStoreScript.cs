@@ -11,7 +11,6 @@ public class obamaGroceryStoreScript : MonoBehaviour
     public KMAudio Audio;
     public KMBombInfo Bomb;
     public KMBombModule Module;
-    public KMGameInfo Game;
 
     public KMSelectable[] obamaBodyButtons;
     public KMSelectable[] weaponButtons, sidekickButtons, foodButtons;
@@ -50,7 +49,6 @@ public class obamaGroceryStoreScript : MonoBehaviour
 
     static readonly float[] punchLengths = { .4f, .251f, .157f };
     bool animationPlaying = false;
-    bool lightsOn = false;
 
     private string[][] _authorMods;
 
@@ -84,13 +82,6 @@ public class obamaGroceryStoreScript : MonoBehaviour
 
         currentSolves = Bomb.GetSolvedModuleNames();
         mainObject.SetActive(true);
-
-        Game.OnLightsChange += delegate (bool state)
-        {
-            Debug.Log("asdfasdfasdf");
-            lightsOn = state;
-            ToggleObama(lightsOn);
-        };
         for (var i = 0; i < 3; i++)
             TPButtons.Add(i == 0 ? weaponButtons : (i == 1 ? sidekickButtons : foodButtons));
 
@@ -119,6 +110,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
         sidekickObject.SetActive(false);
         foodObject.SetActive(false);
 
+        ToggleObama(true);
         var obamaService = FindObjectOfType<ObamaService>();
         if (obamaService == null)
         {
@@ -261,8 +253,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
             sidekickObject.SetActive(false);
             foodObject.SetActive(false);
             mainObject.SetActive(true);
-            if (lightsOn)
-                obamaRenderer.color = Color.white;
+            obamaRenderer.color = Color.white;
             currentlyShown = 0;
             displayText.text = "Submit";
         }
@@ -361,11 +352,6 @@ public class obamaGroceryStoreScript : MonoBehaviour
             DebugMsg("Module solved!");
             obamaRenderer.color = Color.green;
             yield return new WaitForSeconds(1f);
-            while (!lightsOn)
-            {
-                obamaRenderer.color = darkColor;
-                yield return new WaitForSeconds(.1f);
-            }
             obamaRenderer.color = Color.white;
             displayText.text = "GOD BLESS AMERICA";
         }
@@ -390,7 +376,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
 
             obamaRenderer.color = Color.red;
             yield return new WaitForSeconds(1f);
-            ToggleObama(lightsOn);
+            ToggleObama(true);
             animationPlaying = false;
         }
         mainObject.SetActive(true);

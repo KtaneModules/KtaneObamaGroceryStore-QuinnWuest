@@ -5847,7 +5847,6 @@ MonoBehaviour:
   Audio: {fileID: 114090116222266468}
   Bomb: {fileID: 114031945663141736}
   Module: {fileID: 114354275949135942}
-  Game: {fileID: 114920330782629134}
   obamaBodyButtons:
   - {fileID: 114126676361546466}
   - {fileID: 114196870944643240}
