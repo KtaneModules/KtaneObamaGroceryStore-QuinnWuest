@@ -84,7 +84,6 @@ public class obamaGroceryStoreScript : MonoBehaviour
         mainObject.SetActive(true);
         for (var i = 0; i < 3; i++)
             TPButtons.Add(i == 0 ? weaponButtons : (i == 1 ? sidekickButtons : foodButtons));
-
     }
 
     private void Update()
@@ -127,17 +126,17 @@ public class obamaGroceryStoreScript : MonoBehaviour
         _authorMods = obamaService.GetAuthorMods();
     }
 
-    string getLatestSolve(List<string> s, List<string> s2)
+    string getLatestSolve(List<string> solvedModules, List<string> currentSolves)
     {
-        for (int i = 0; i < s2.Count; i++)
+        for (int i = 0; i < currentSolves.Count; i++)
         {
-            s.Remove(s2.ElementAt(i));
+            solvedModules.Remove(currentSolves.ElementAt(i));
         }
-        for (int i = 0; i < s.Count; i++)
+        for (int i = 0; i < solvedModules.Count; i++)
         {
-            currentSolves.Add(s.ElementAt(i));
+            this.currentSolves.Add(solvedModules.ElementAt(i));
         }
-        return s.ElementAt(0);
+        return solvedModules.ElementAt(0);
     }
 
     public IEnumerable<int> GetModAuthorValue(string modName)
@@ -175,7 +174,10 @@ public class obamaGroceryStoreScript : MonoBehaviour
             // Sidekick check
             rows = new[] { false, false, false, false, false, false };
 
-            foreach (var author in GetModAuthorValue(lastSolved))
+            var authors = GetModAuthorValue(lastSolved);
+            var allAuthors = new[] { "Timwi", "Royal_Flu$h", "Speakingevil", "Deaf", "TasThiluna", "Blananas2" };
+            DebugMsg(string.Format("Authors are: [{0}]", authors.Select(i => allAuthors[i]).Join(", ")));
+            foreach (var author in authors)
                 rows[author] = true;
 
             if (!rows.Any(x => x)) // no rows in common
