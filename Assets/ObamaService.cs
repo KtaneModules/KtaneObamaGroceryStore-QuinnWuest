@@ -17,7 +17,7 @@ public class ObamaService : MonoBehaviour
     private string _settingsFile;
     private ObamaSettings _settings;
 
-    private static readonly string[] _authorNames = new string[6] { "Timwi", "Royal_Flu$h", "Speakingevil", "Deaf", "TasThiluna", "Blananas2" };
+    public static readonly string[] AuthorNames = new string[6] { "Timwi", "Royal_Flu$h", "Speakingevil", "Deaf", "TasThiluna", "Blananas2" };
 
     private static readonly string[][] _backupAuthorModList = {
         new string[86] {"SIMON SIGNALS", "CONCENTRATION", "VORONOI MAZE", "NOT X-RAY", "VARIETY", "NOT POKER", "AQUARIUM", "NONBINARY PUZZLE", "WIRE ASSOCIATION", "MARITIME SEMAPHORE", "SIMON SHOUTS", "VOLTORB FLIP", "PUZZWORD", "ULTIMATE TIC TAC TOE", "DACH MAZE", "BLOXX", "KYUDOKU", "COLOR BRAILLE", "MYSTERY MODULE", "CORNERS", "THE ULTRACUBE", "ODD ONE OUT", "THE HYPERCUBE", "DECOLORED SQUARES", "DISCOLORED SQUARES", "SIMON SPEAKS", "HOGWARTS", "REGULAR CRAZY TALK", "BROKEN GUITAR CHORDS", "BINARY PUZZLE", "CURSED DOUBLE-OH", "SIMON SPINS", "KUDOSUDOKU", "MAHJONG", "101 DALMATIANS", "DIVIDED SQUARES", "LION’S SHARE", "TENNIS", "3D TUNNELS", "DRAGON ENERGY", "UNCOLORED SQUARES", "PATTERN CUBE", "MARITIME FLAGS", "BLACK HOLE", "LASERS", "SIMON SHRIEKS", "SIMON SENDS", "SIMON SINGS", "MARBLE TUMBLE", "DR. DOCTOR", "SUPERLOGIC", "HUMAN RESOURCES", "POLYHEDRAL MAZE", "MAFIA", "BRAILLE", "SYMBOL CYCLE", "S.E.T.", "PERPLEXING WIRES", "COLORED SWITCHES", "GRIDLOCK", "COLOR MORSE", "X-RAY", "YAHTZEE", "POINT OF ORDER", "ZOO", "THE CLOCK", "RUBIK'S CUBE", "ONLY CONNECT", "LIGHT CYCLE", "COORDINATES", "DOUBLE-OH", "WIRE PLACEMENT", "BATTLESHIP", "SIMON SCREAMS", "WORD SEARCH", "SOUVENIR", "ADJACENT LETTERS", "COLORED SQUARES", "BITMAPS", "HEXAMAZE", "ROCK-PAPER-SCISSORS-LIZARD-SPOCK", "BLIND ALLEY", "THE BULB", "FRIENDSHIP", "FOLLOW THE LEADER", "TIC TAC TOE" },
@@ -95,7 +95,7 @@ public class ObamaService : MonoBehaviour
 
             UsingDefaultList = false;
 
-            var allRelevantMods = Enumerable.Range(0, _authorNames.Length).Select(_ => new List<string>()).ToArray();
+            var allRelevantMods = Enumerable.Range(0, AuthorNames.Length).Select(_ => new List<string>()).ToArray();
 
             foreach (JObject module in allModules)
             {
@@ -107,13 +107,13 @@ public class ObamaService : MonoBehaviour
                     continue;
                 foreach (var c in ((string)contrib.Value).Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    var pos = Array.IndexOf(_authorNames, c);
+                    var pos = Array.IndexOf(AuthorNames, c);
                     if (pos != -1)
                         allRelevantMods[pos].Add((string)name.Value);
                 }
             }
 
-            Debug.LogFormat(@"[Obama Service] List successfully loaded:{0}{1}", Environment.NewLine, string.Join(Environment.NewLine, allRelevantMods.Select((modules, ix) => string.Format("[Obama Service] {0} => {1}", _authorNames[ix], modules.Join(", "))).ToArray()));
+            Debug.LogFormat(@"[Obama Service] List successfully loaded:{0}{1}", Environment.NewLine, string.Join(Environment.NewLine, allRelevantMods.Select((modules, ix) => string.Format("[Obama Service] {0} => {1}", AuthorNames[ix], modules.Join(", "))).ToArray()));
             _settings.AuthorMods = allRelevantMods.Select(i => i.ToArray()).ToArray();
             _settings.Version = 1;
             SettingsLoaded = true;

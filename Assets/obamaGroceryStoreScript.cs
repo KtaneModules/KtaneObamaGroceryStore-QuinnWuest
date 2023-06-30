@@ -50,7 +50,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
     static readonly float[] punchLengths = { .4f, .251f, .157f };
     bool animationPlaying = false;
 
-    private string[][] _authorMods;
+    ObamaService obamaService;
 
     private void Awake()
     {
@@ -110,7 +110,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
         foodObject.SetActive(false);
 
         ToggleObama(true);
-        var obamaService = FindObjectOfType<ObamaService>();
+        obamaService = FindObjectOfType<ObamaService>();
         if (obamaService == null)
         {
             Debug.LogFormat(@"[Obama Grocery Store #{0}] Catastrophic problem: Obama Service is not present.", moduleId);
@@ -123,7 +123,6 @@ public class obamaGroceryStoreScript : MonoBehaviour
             warningObject.SetActive(true);
             Debug.LogFormat(@"[Obama Grocery Store #{0}] Unable to download list of modules. Using default list.", moduleId);
         }
-        _authorMods = obamaService.GetAuthorMods();
     }
 
     string getLatestSolve(List<string> solvedModules, List<string> currentSolves)
@@ -141,8 +140,9 @@ public class obamaGroceryStoreScript : MonoBehaviour
 
     public IEnumerable<int> GetModAuthorValue(string modName)
     {
-        for (int i = 0; i < _authorMods.Length; i++)
-            if (_authorMods[i].Any(x => x.EqualsIgnoreCase(modName)))
+        var authorMods = obamaService.GetAuthorMods();
+        for (int i = 0; i < authorMods.Length; i++)
+            if (authorMods[i].Any(x => x.EqualsIgnoreCase(modName)))
                 yield return i;
     }
 
@@ -175,8 +175,7 @@ public class obamaGroceryStoreScript : MonoBehaviour
             rows = new[] { false, false, false, false, false, false };
 
             var authors = GetModAuthorValue(lastSolved);
-            var allAuthors = new[] { "Timwi", "Royal_Flu$h", "Speakingevil", "Deaf", "TasThiluna", "Blananas2" };
-            DebugMsg(string.Format("Authors are: [{0}]", authors.Select(i => allAuthors[i]).Join(", ")));
+            DebugMsg(string.Format("Authors are: [{0}]", authors.Select(i => ObamaService.AuthorNames[i]).Join(", ")));
             foreach (var author in authors)
                 rows[author] = true;
 
