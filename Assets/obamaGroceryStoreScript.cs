@@ -89,14 +89,9 @@ public class obamaGroceryStoreScript : MonoBehaviour
     private void Update()
     {
         if (solved) { return; }
-
         var solvedModules = Bomb.GetSolvedModuleNames();
         if (currentSolves.Count != solvedModules.Count)
-        {
             lastSolved = getLatestSolve(solvedModules, currentSolves).ToUpperInvariant();
-            // DebugMsg("Last solved mod is now " + lastSolved + "...");
-        }
-        warningObject.SetActive(FindObjectOfType<ObamaService>().UsingDefaultList);
     }
 
     private void Start()
@@ -122,6 +117,11 @@ public class obamaGroceryStoreScript : MonoBehaviour
         {
             warningObject.SetActive(true);
             Debug.LogFormat(@"[Obama Grocery Store #{0}] Unable to download list of modules. Using default list.", moduleId);
+        }
+        else
+        {
+            warningObject.SetActive(false);
+            Debug.LogFormat(@"<Obama Grocery Store #{0}> Successfully downloaded list of modules.", moduleId);
         }
     }
 
